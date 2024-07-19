@@ -9,6 +9,7 @@ import {
   updatePassword,
   getUserPortfolioData,
   forgotPassword,
+  resetPassword,
 } from "../controllers/userController.js";
 import authMiddleware from "../middlewares/authMiddleware.js";
 
@@ -20,6 +21,7 @@ userRouter.route("/update/password").patch(authMiddleware, updatePassword);
 userRouter.route("/logout").get(authMiddleware, logout);
 
 userRouter.route("/getUserPortfolio").get(getUserPortfolioData);
-userRouter.route("/forgotPassword").patch(forgotPassword);
+userRouter.route("/password/forgot").post(forgotPassword);
+userRouter.route("/password/reset/:token").patch(resetPassword);
 
 export default userRouter;

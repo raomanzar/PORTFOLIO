@@ -2,6 +2,7 @@ import { v2 as cloudinary } from "cloudinary";
 import User from "../models/user-model.js";
 import { ErrorHandler } from "../middlewares/errorMiddleware.js";
 import sendEmail from "../helpers/sendEmail.js";
+import crypto from "crypto";
 
 const register = async (req, res, next) => {
   try {
@@ -267,14 +268,13 @@ const forgotPassword = async (req, res, next) => {
     const forgotPasswordToken = user.getForgotPasswordToken();
     await user.save({ validateBeforeSave: false });
     const forgotPasswordUrl = `${process.env.DASHBOARD_URL}/password/forgot/${forgotPasswordToken}`;
-    const emailMessage = `Your forgot password url is \n\n${forgotPasswordUrl} \n\nIgnore this message if you have not requested this. `;
+    const emailMessage = `Your forgot password url is \n\n${forgotPasswordUrl}\n\nThis link will expire in 10 minutes\n\nIgnore this message if you have not requested this. `;
 
     const emailResponse = await sendEmail({
       email: user.email,
       subject: "Personal Prtfolio Dashboard Recovery Password",
       message: emailMessage,
     });
-    console.log(emailResponse);
 
     if (emailResponse) {
       res.status(200).json({
@@ -292,6 +292,57 @@ const forgotPassword = async (req, res, next) => {
   }
 };
 
+const resetPassword = async (req, res, next) => {
+  try {
+    if (!req.body.password || !req.body.confirmPassword) {
+      return next(
+        new ErrorHandler(
+          400,
+          "",
+          "Password and ConfirmPassword field should not be empty"
+        )
+      );
+    }
+    const { token } = req.params;
+    const resetPasswordToken = crypto
+      .createHash("sha256")
+      .update(token)
+      .digest("hex");
+
+    const user = await User.findOne({
+      forgotPasswordToken: resetPasswordToken,
+      forgotPasswordTokenExpired: { $gt: Date.now() },
+    });
+
+    if (!user) {
+      return next(
+        new ErrorHandler(
+          400,
+          "",
+          "Reset password token has been expired or invalid"
+        )
+      );
+    }
+
+    if (req.body.password !== req.body.confirmPassword) {
+      return next(
+        new ErrorHandler(400, "", "Password and Confirm Password doesn't match")
+      );
+    }
+    user.password = req.body.password;
+    user.forgotPasswordToken = undefined;
+    user.forgotPasswordTokenExpired = undefined;
+    let response = await user.save();
+    if (response) {
+      res
+        .status(200)
+        .json({ status: true, message: "Password reset successfully" });
+    }
+  } catch (error) {
+    next(error);
+  }
+};
+
 export {
   register,
   login,
@@ -301,4 +352,5 @@ export {
   updatePassword,
   getUserPortfolioData,
   forgotPassword,
+  resetPassword,
 };
