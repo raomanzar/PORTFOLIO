@@ -16,5 +16,5 @@ dbConnection()
     });
   })
   .catch((error) =>
-    console.log(`${error}.\\n This error occured while connecting database`)
+    console.error(`${error}.\\n This error occured while connecting database`)
   );

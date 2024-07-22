@@ -24,13 +24,13 @@ export default function Login() {
 
   useEffect(() => {
     if (error) {
-      toast(error);
+      toast.error(error);
       dispatch(clearAllUserErrors());
     }
     if (isAuthenticated) {
       navigate("/");
     }
-  }, [dispatch, isAuthenticated, error, loading]);
+  }, [dispatch, error, isAuthenticated, loading]);
 
   return (
     <div className="min-h-[100dvh] flex items-center justify-center py-12">

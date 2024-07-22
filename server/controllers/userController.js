@@ -64,19 +64,20 @@ const register = async (req, res, next) => {
 const login = async (req, res, next) => {
   try {
     const { email, password } = req.body;
-    if (!email || !password) {
+
+    if (!email) {
+      return next(new ErrorHandler(400, "Field Missing", "Email is required."));
+    }
+
+    if (!password) {
       return next(
-        new ErrorHandler(
-          400,
-          "Field Missing",
-          "Email and Password are required"
-        )
+        new ErrorHandler(400, "Field Missing", "Password is required.")
       );
     }
 
     const userExist = await User.findOne({ email }).select("+password");
     if (!userExist) {
-      return next(new ErrorHandler(404, null, "Invalid Email or Password"));
+      return next(new ErrorHandler(404, null, "Invalid Credentials"));
     } else {
       const verifyPass = await userExist.comparePassword(password);
       if (!verifyPass) {
@@ -96,8 +97,7 @@ const login = async (req, res, next) => {
           .json({
             status: true,
             message: "Login successfull",
-            email: user.email,
-            id: user._id,
+            user,
             token: token,
           });
       }

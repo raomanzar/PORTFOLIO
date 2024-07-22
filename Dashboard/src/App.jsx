@@ -16,7 +16,7 @@ function App() {
           <Route path="/password/forgot" element={<ForgotPassword />} />
           <Route path="/password/reset" element={<ResetPassword />} />
         </Routes>
-        <ToastContainer position="top_rigth" theme="light" />
+        <ToastContainer position="top-right" theme="light" />
       </BrowserRouter>
       s
     </>
