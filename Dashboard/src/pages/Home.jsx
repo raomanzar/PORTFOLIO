@@ -19,9 +19,12 @@ const Home = () => {
   useEffect(() => {
     if (!isAuthenticated) {
       navigate("/login");
-      toast.success("Logged Out Successfully");
     }
   }, [dispatch, isAuthenticated, error]);
+
+  if (!isAuthenticated) {
+    return null;
+  }
   return (
     <>
       <Button type="submit" className="w-full" onClick={handleLogout}>

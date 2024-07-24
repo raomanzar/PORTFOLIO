@@ -323,7 +323,7 @@ const resetPassword = async (req, res, next) => {
         new ErrorHandler(
           400,
           "",
-          "Reset Password token has been expired or invalid"
+          "Reset Password token has been Expired or Invalid"
         )
       );
     }

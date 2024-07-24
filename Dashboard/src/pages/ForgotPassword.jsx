@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   forgotPassword,
   clearAllForgotPasswordErrors,
+  clearAllForgotPasswordStates,
 } from "../store/forgotPasswordSlice.js";
 import { toast } from "react-toastify";
 
@@ -34,6 +35,7 @@ const ForgotPassword = () => {
     }
     if (message.length > 0) {
       setEmail("");
+      dispatch(clearAllForgotPasswordStates());
     }
   }, [dispatch, isAuthenticated, loading, error, message]);
 
@@ -45,7 +47,7 @@ const ForgotPassword = () => {
     <div className="min-h-[100dvh] flex items-center justify-center py-12">
       <div className="mx-auto grid w-[350px] gap-6">
         <div className="grid gap-2 text-center">
-          <h1 className="text-3xl font-bold">Forgot Password</h1>
+          <h1 className="text-3xl font-bold">Forgot Admin Password</h1>
         </div>
         <div className="grid gap-4">
           <div className="grid gap-2">

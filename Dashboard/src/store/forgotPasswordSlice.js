@@ -40,6 +40,11 @@ const forgotPassowrdSlice = createSlice({
       state.message = "";
       state.error = action.payload;
     },
+    clearAllStates: (state) => {
+      state.loading = false;
+      state.message = "";
+      state.error = "";
+    },
     clearAllError: (state) => {
       state.error = "";
     },
@@ -75,6 +80,7 @@ export const resetPassword =
         `http://localhost:4000/api/v1/user/password/reset/${token}`,
         { password, confirmPassword },
         {
+          withCredentials: true,
           headers: { "Content-Type": "application/json" },
         }
       );
@@ -92,6 +98,11 @@ export const resetPassword =
       );
     }
   };
+
+export const clearAllForgotPasswordStates = () => (dispatch) => {
+  dispatch(forgotPassowrdSlice.actions.clearAllStates());
+};
+
 export const clearAllForgotPasswordErrors = () => (dispatch) => {
   dispatch(forgotPassowrdSlice.actions.clearAllError());
 };

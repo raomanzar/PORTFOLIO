@@ -92,7 +92,10 @@ export const Logout = () => async (dispatch) => {
         withCredentials: true,
       }
     );
-    dispatch(userSlice.actions.logoutSuccess());
+    if (data) {
+      dispatch(userSlice.actions.logoutSuccess());
+      toast.success("Logged Out Successfully");
+    }
   } catch (error) {
     dispatch(userSlice.actions.logoutFailed(error.message));
   }

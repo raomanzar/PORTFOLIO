@@ -38,7 +38,7 @@ export default function Login() {
     <div className="min-h-[100dvh] flex items-center justify-center py-12">
       <form onSubmit={handleLogin} className="mx-auto grid w-[350px] gap-6">
         <div className="grid gap-2 text-center">
-          <h1 className="text-3xl font-bold">Login</h1>
+          <h1 className="text-3xl font-bold">Admin Login</h1>
         </div>
         <div className="grid gap-4">
           <div className="grid gap-2">
@@ -67,12 +67,14 @@ export default function Login() {
                 Forgot your password?
               </Link>
             </div>
-            <Input
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              type="password"
-              required
-            />
+            <div>
+              <Input
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                type="password"
+                required
+              />
+            </div>
           </div>
           <Button type="submit" className="w-full">
             {loading ? "Loading..." : "Login"}
