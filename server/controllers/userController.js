@@ -259,15 +259,19 @@ const getUserPortfolioData = async (req, res, next) => {
 
 const forgotPassword = async (req, res, next) => {
   try {
+    if (!req.body.email) {
+      return next(new ErrorHandler(400, "Field Missing", "Email is required."));
+    }
+
     const user = await User.findOne({ email: req.body.email });
 
     if (!user) {
-      return next(new ErrorHandler(400, "", "Incorrect Email"));
+      return next(new ErrorHandler(404, "", "User Not Found"));
     }
 
     const forgotPasswordToken = user.getForgotPasswordToken();
     await user.save({ validateBeforeSave: false });
-    const forgotPasswordUrl = `${process.env.DASHBOARD_URL}/password/forgot/${forgotPasswordToken}`;
+    const forgotPasswordUrl = `${process.env.DASHBOARD_URL}/password/reset/${forgotPasswordToken}`;
     const emailMessage = `Your forgot password url is \n\n${forgotPasswordUrl}\n\nThis link will expire in 10 minutes\n\nIgnore this message if you have not requested this. `;
 
     const emailResponse = await sendEmail({
@@ -285,7 +289,7 @@ const forgotPassword = async (req, res, next) => {
       user.forgotPasswordToken = undefined;
       user.forgotPasswordTokenExpired = undefined;
       await user.save({ validateBeforeSave: false });
-      return next(new ErrorHandler(500, "", "Error in email response"));
+      return next(new ErrorHandler(500, "", "Error in Sending Email"));
     }
   } catch (error) {
     next(error);
@@ -319,7 +323,7 @@ const resetPassword = async (req, res, next) => {
         new ErrorHandler(
           400,
           "",
-          "Reset password token has been expired or invalid"
+          "Reset Password token has been expired or invalid"
         )
       );
     }

@@ -20,8 +20,11 @@ userRouter.route("/update/me").patch(authMiddleware, updateUser);
 userRouter.route("/update/password").patch(authMiddleware, updatePassword);
 userRouter.route("/logout").get(authMiddleware, logout);
 
-userRouter.route("/getUserPortfolio").get(getUserPortfolioData);
+// before login forgot password
 userRouter.route("/password/forgot").post(forgotPassword);
 userRouter.route("/password/reset/:token").patch(resetPassword);
+
+//web portfolio api
+userRouter.route("/getUserPortfolio").get(getUserPortfolioData);
 
 export default userRouter;

@@ -5,6 +5,7 @@ import Home from "./pages/Home";
 import Login from "./pages/Login";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
+import NotFound from "./pages/404";
 
 function App() {
   return (
@@ -14,9 +15,10 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/password/forgot" element={<ForgotPassword />} />
-          <Route path="/password/reset" element={<ResetPassword />} />
+          <Route path="/password/reset/:token" element={<ResetPassword />} />
+          <Route path="*" element={<NotFound />} />
         </Routes>
-        <ToastContainer position="top-right" theme="light" />
+        <ToastContainer position="top-right" theme="light" autoClose={2000} />
       </BrowserRouter>
       s
     </>

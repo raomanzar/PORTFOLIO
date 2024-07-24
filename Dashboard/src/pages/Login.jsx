@@ -15,9 +15,11 @@ export default function Login() {
   const dispatch = useDispatch();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [isHovered, setIsHovered] = useState(false);
 
-  const handleLogin = () => {
-    dispatch(login(email, password));
+  const handleLogin = (e) => {
+    e.preventDefault();
+    dispatch(login({ email, password }));
     setEmail("");
     setPassword("");
   };
@@ -30,16 +32,13 @@ export default function Login() {
     if (isAuthenticated) {
       navigate("/");
     }
-  }, [dispatch, error, isAuthenticated, loading]);
+  }, [dispatch, error, isAuthenticated, navigate]);
 
   return (
     <div className="min-h-[100dvh] flex items-center justify-center py-12">
-      <div className="mx-auto grid w-[350px] gap-6">
+      <form onSubmit={handleLogin} className="mx-auto grid w-[350px] gap-6">
         <div className="grid gap-2 text-center">
           <h1 className="text-3xl font-bold">Login</h1>
-          <p className="text-balance text-muted-foreground">
-            Enter your email below to login to your account
-          </p>
         </div>
         <div className="grid gap-4">
           <div className="grid gap-2">
@@ -56,7 +55,13 @@ export default function Login() {
             <div className="flex items-center">
               <Label htmlFor="password">Password</Label>
               <Link
-                href="/forgot-password"
+                onMouseEnter={() => setIsHovered(true)}
+                onMouseLeave={() => setIsHovered(false)}
+                style={{
+                  color: isHovered ? "blue" : "#000",
+                  transition: "color 0.2s ease",
+                }}
+                to={"/password/forgot"}
                 className="ml-auto inline-block text-sm underline"
               >
                 Forgot your password?
@@ -69,11 +74,11 @@ export default function Login() {
               required
             />
           </div>
-          <Button type="submit" className="w-full" onClick={handleLogin}>
+          <Button type="submit" className="w-full">
             {loading ? "Loading..." : "Login"}
           </Button>
         </div>
-      </div>
+      </form>
     </div>
   );
 }

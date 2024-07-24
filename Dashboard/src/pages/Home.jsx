@@ -3,20 +3,25 @@ import { Logout } from "../store/userSlice.js";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const Home = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { isAuthenticated } = useSelector((state) => state.user);
+  const { isAuthenticated, error } = useSelector((state) => state.user);
 
   const handleLogout = () => {
+    if (error) {
+      toast.error(error);
+    }
     dispatch(Logout());
   };
   useEffect(() => {
     if (!isAuthenticated) {
       navigate("/login");
+      toast.success("Logged Out Successfully");
     }
-  }, [dispatch, isAuthenticated]);
+  }, [dispatch, isAuthenticated, error]);
   return (
     <>
       <Button type="submit" className="w-full" onClick={handleLogout}>
